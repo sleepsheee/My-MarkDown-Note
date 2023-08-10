@@ -1,12 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useMemo } from "react";
 import { Container } from "react-bootstrap";
-import { Route, Routes, Navigate } from "react-router-dom";
-
+import { Routes, Route, Navigate } from "react-router-dom";
+import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
-import { NewNote } from "./NewNote";
 import { NoteList } from "./NoteList";
+import { NoteLayout } from "./NoteLayout";
+import { Note } from "./Note";
+// import { EditNote } from "./EditNote";
 
 export type Note = {
   id: string;
@@ -18,13 +20,13 @@ export type RawNote = {
 
 export type RawNoteData = {
   title: string;
-  textarea: string;
+  markdown: string;
   tagIds: string[];
 };
 
 export type NoteData = {
   title: string;
-  textarea: string;
+  markdown: string;
   tags: Tag[];
 };
 
@@ -34,8 +36,8 @@ export type Tag = {
 };
 
 function App() {
-  const [notes, setNotes] = useLocalStorage<RawNote[]>("notes", []);
-  const [tags, setTags] = useLocalStorage<Tag[]>("tags", []);
+  const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
+  const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
   const notesWithTags = useMemo(() => {
     return notes.map((note) => {
@@ -55,8 +57,44 @@ function App() {
     });
   }
 
+  function onUpdateNote(id: string, { tags, ...data }: NoteData) {
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+        } else {
+          return note;
+        }
+      });
+    });
+  }
+
+  function onDeleteNote(id: string) {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id);
+    });
+  }
+
   function addTag(tag: Tag) {
     setTags((prev) => [...prev, tag]);
+  }
+
+  function updateTag(id: string, label: string) {
+    setTags((prevTags) => {
+      return prevTags.map((tag) => {
+        if (tag.id === id) {
+          return { ...tag, label };
+        } else {
+          return tag;
+        }
+      });
+    });
+  }
+
+  function deleteTag(id: string) {
+    setTags((prevTags) => {
+      return prevTags.filter((tag) => tag.id !== id);
+    });
   }
 
   return (
@@ -64,8 +102,15 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<NoteList availableTags={tags}></NoteList>}
-        ></Route>
+          element={
+            <NoteList
+              notes={notesWithTags}
+              availableTags={tags}
+              onUpdateTag={updateTag}
+              onDeleteTag={deleteTag}
+            />
+          }
+        />
         <Route
           path="/new"
           element={
@@ -76,10 +121,18 @@ function App() {
             />
           }
         />
-
-        <Route path="/:id">
-          <Route index element={<h1>show</h1>}></Route>
-          <Route path="edit" element={<h1>edit</h1>}></Route>
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+          <Route index element={<Note />} />
+          <Route
+            path="edit"
+            // element={
+            //   <EditNote
+            //     onSubmit={onUpdateNote}
+            //     onAddTag={addTag}
+            //     availableTags={tags}
+            //   />
+            // }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

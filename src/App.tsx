@@ -13,7 +13,7 @@ import { EditNote } from "./EditNote";
 export type Note = {
   id: string;
 } & NoteData;
-
+/* NoteData is simply data with no id attached to it*/
 export type RawNote = {
   id: string;
 } & RawNoteData;
@@ -23,7 +23,7 @@ export type RawNoteData = {
   markdown: string;
   tagIds: string[];
 };
-
+/* not storeing tags but tag ids, if change tags,can change with ids */
 export type NoteData = {
   title: string;
   markdown: string;
@@ -139,5 +139,11 @@ function App() {
     </Container>
   );
 }
+/*if route something not exist, navigate to home page*/
 
+/*index routes render into parent's url  */
+
+/*<container>  bootstrap*/
+
+/*typescript data type:  Boolean, Number,String,Array,Enum,Any,Void*/
 export default App;

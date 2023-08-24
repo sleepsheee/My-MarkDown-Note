@@ -1,4 +1,16 @@
 
+create vite with npm: npm create vite@latest
+install dependencies: npm i
+npm run dev
+
+
+tsconfig.json: ts config file
+vite.config.ts: vite config file
+
+
 npm i react-bootstrap bootstrap react-router-dom
+  bootstrap for styling and react router for routing 
 npm i react-select
+  for creatable tags
 npm i react-markdown
+npm i uuid

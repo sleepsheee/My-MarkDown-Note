@@ -19,3 +19,4 @@ export function NewNote({ onSubmit, onAddTag, availableTags }: NewNoteProps) {
     </>
   );
 }
+/* newnote and editnote use the same component noteform*/

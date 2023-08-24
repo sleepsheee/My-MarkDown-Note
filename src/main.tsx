@@ -10,3 +10,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+/*import the specific router you need (BrowserRouter for the web and NativeRouter for mobile) and wrap your entire application in that router.*/

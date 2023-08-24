@@ -19,7 +19,7 @@ export function NoteForm({
   markdown = "",
   tags = [],
 }: NoteFormProps) {
-  const titleRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef<HTMLInputElement>(null); //initial null
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const navigate = useNavigate();
@@ -97,3 +97,4 @@ export function NoteForm({
     </Form>
   );
 }
+/*className="justify-content-end" push buttons to the right end of page */
